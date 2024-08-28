@@ -17,7 +17,22 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-   
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginUser) {
+        String username = loginUser.getUsername();
+        String password = loginUser.getPassword();
+
+        User user = userService.login(username, password);
+        if (user != null) {
+            // Return username and user_id in a JSON object
+            return ResponseEntity.ok().body(
+                    Map.of("username", username, "user_id", user.getId())
+            );
+        } else {
+            // Handle login failure
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
