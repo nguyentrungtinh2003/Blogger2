@@ -17,6 +17,12 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
+    public User login(String username, String password) {
+        String hashedPassword = hashPassword(password);
+        return userRepository.findByUsernameAndPassword(username, hashedPassword);
+    }
+
+    @Override
     public User register(User user) {
         // Check if username already exists
         if (userRepository.findByUsername(user.getUsername()) != null) {
